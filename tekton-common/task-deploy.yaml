@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy
+spec:
+  description: Deploy and monitor for error
+  workspaces:
+  - name: source
+  params:
+  - name: key
+    type: string
+    default: default
+  steps:
+  - name: deploy
+    image: image
+    workingDir: $(workspaces.source.path)/$(params.context-dir)
+    script: |
+      oc 

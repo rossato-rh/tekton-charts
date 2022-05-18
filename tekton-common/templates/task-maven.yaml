@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: java-maven
+spec:
+  description: This task runs mvnw if present or mvn
+  workspaces:
+  - name: source
+  - name: maven-settings
+  params:
+  - name: maven-image
+    type: string
+    description: Maven base image
+    default: gcr.io/cloud-builders/mvn:latest
+  - name: context-dir
+    type: string
+    description: Base directory for maven commands
+    default: "."
+  - name: goals
+    type: string
+  steps:
+  - name: run-goals
+    image: $(params.maven-image)
+    workingDir: $(workspaces.source.path)/$(params.context-dir)
+    script: |
+      MVN_ARGS="-s $(workspaces.maven-settings.path)/settings.xml $(params.goals)"
+      if [ -x "mvnw" ]; then
+        ./mvnw ${MVN_ARGS}
+      else
+        mvn ${MVN_ARGS}
+      fi
