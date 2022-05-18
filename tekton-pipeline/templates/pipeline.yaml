@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ .Release.Name }}
 spec:
   workspaces:
   - name: scratch
